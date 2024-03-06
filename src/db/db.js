@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import asyncHandler from "express-async-handler";
+import {asyncHandler} from "../utils/asyncHandler.js";
 import { DB_NAME } from "../constant.js";
 import dotenv from "dotenv";
 dotenv.config();

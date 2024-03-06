@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 
 const app = express();
@@ -13,13 +14,16 @@ app.use(cors(
 
 ));
 
-
 app.use(cookieParser());
 
-app.use(express.json());
+app.use(express.json({limit:"30mb",extended:true}));
 app.use(express.urlencoded({extended:true}));
 
 app.use(express.static("public"));
+
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"))
+
 
 //Routes
 import userRoute from './routes/user.route.js';
