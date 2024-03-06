@@ -29,6 +29,10 @@ const userSchema = new Schema({
     profilePic:{
         type:String,
         required:true
+    },
+    refreshToken:{
+        type:String
+    
     }
 },{timestamps:true});
 
@@ -46,7 +50,7 @@ userSchema.methods.comparePassword = function(password){
 
 userSchema.methods.generateAccessToken = async function(){
     return jwt.sign(
-        {_id: _id,
+        {_id:this._id,
         email:this.email,
         username:this.username,
         fullName:this.fullName},
@@ -62,7 +66,7 @@ userSchema.methods.generateAccessToken = async function(){
 
 userSchema.methods.generateresfreshToken = async function(){
     return jwt.sign(
-        {_id: _id,
+        {_id: this._id,
         email:this.email,
         },
         process.env.JWT_SECRET,

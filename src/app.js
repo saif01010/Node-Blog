@@ -27,8 +27,8 @@ app.set("views", path.resolve("./views"))
 
 //Routes
 import userRoute from './routes/user.route.js';
-
+import blogRoute from './routes/blog.route.js';
 app.use("/users",userRoute);
-
+app.use("/blogs",blogRoute);
 
 export {app};
