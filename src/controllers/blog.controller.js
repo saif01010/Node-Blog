@@ -41,4 +41,14 @@ const createBlog = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(201, blog, 'Blog created successfully'));
 });
 
-export { createBlog };
+const getBlogs = asyncHandler(async (req, res) => {
+    const blogs = await Blog.find();
+    if (!blogs) {
+        throw new ApiError(500, 'Failed to get blogs');
+    }
+
+    return res.status(200)
+    .json(new ApiResponse(200, blogs, 'Blogs fetched successfully'));
+});
+
+export { createBlog, getBlogs};

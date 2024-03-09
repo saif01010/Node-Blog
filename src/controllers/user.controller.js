@@ -91,4 +91,77 @@ const loginUser = asyncHandler(async(req,res)=>{
     .json(new ApiResponse(200,loggedInUser,"User logged in successfully"));
 })
 
-export {registerUser,loginUser};
+const logoutUser = asyncHandler(async(req,res)=>{
+
+    res.clearCookie("refreshToken")
+    .clearCookie("accessToken")
+    .json(new ApiResponse(200,{},"User logged out successfully"));
+});
+
+const editProfile = asyncHandler(async(req,res)=>{
+    const {fullName,username} = req.body;
+    const userId = req.user._id;
+
+    const user = await User.findByIdAndUpdate(userId,{
+        $set:{
+            fullName,
+            username
+        }
+    },{new:true});
+
+    if(!user){
+        throw new ApiError(500,"Failed to update user");
+    };
+
+    return res.status(200)
+    .json(new ApiResponse(200,user,"User updated successfully"));
+});
+
+const getCurrentUser = asyncHandler(async(req,res)=>{
+    const userId = req.user._id;
+    // const user = await User.findById(userId).select("-password -refreshToken");
+    const user = await User.aggregate([
+        { 
+        $match: {
+         _id: userId 
+        }
+    },
+    {
+        $lookup: {
+            from: "blogs",
+            localField: "_id",
+            foreignField: "author",
+            as: "posts"
+        }
+    },
+    {
+        $addFields: {
+            totalPosts: { $size: "$posts"},
+            posts: { $slice: ["$posts", 5]}
+        }
+    },
+    {   $project: { 
+
+            totalPosts: 1,
+            posts: 1,
+            fullName: 1,
+            email: 1,
+        }
+    }]);
+    if(!user){
+        throw new ApiError(500,"Failed to get user");
+    };
+    return res.status(200)
+    .json(new ApiResponse(200,user,"User retrieved successfully"));
+});
+
+const deleteAccount = asyncHandler(async(req,res)=>{
+    const userId = req.user._id;
+    const user = await User.findByIdAndDelete(userId);
+    if(!user){
+        throw new ApiError(500,"Failed to delete user");
+    };
+    return res.status(200).json(new ApiResponse(200,{},"User deleted successfully"));
+});
+
+export {registerUser,loginUser,logoutUser,editProfile,deleteAccount,getCurrentUser};
