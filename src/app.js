@@ -21,10 +21,6 @@ app.use(express.urlencoded({extended:true}));
 
 app.use(express.static("public"));
 
-app.set("view engine", "ejs");
-app.set("views", path.resolve("./views"))
-
-
 //Routes
 import userRoute from './routes/user.route.js';
 import blogRoute from './routes/blog.route.js';
