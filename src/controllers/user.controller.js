@@ -165,11 +165,12 @@ const deleteAccount = asyncHandler(async(req,res)=>{
 });
 
 const getAllUsers = asyncHandler(async(req,res)=>{
-    const users = await User.find();
+    const users = await User.find().select("-password -refreshToken -createdAt -updatedAt");
     if(!users){
         throw new ApiError(500,"Failed to get users");
     };
-    return res.status(200).json(new ApiResponse(200,users,"Users fetched successfully"));
+    const totalUsers = users.length;
+    return res.status(200).json({status:200,totalUsers,data:users,messege:"Users retrieved successfully",success:true});
 });
 
 const logOutUser = asyncHandler(async(req,res)=>{

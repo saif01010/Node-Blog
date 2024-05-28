@@ -3,7 +3,7 @@ import { registerUser,loginUser,
     editProfile,deleteAccount,
     getCurrentUser, 
     getAllUsers,
-    logOutUser} from "../controllers/user.controller.js";
+    logoutUser} from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js";
 import {veryfyToken} from "../middlewares/auth.middleware.js";
 
@@ -15,6 +15,6 @@ router.route("/login").get(loginUser);
 router.route("/edit").put(veryfyToken,editProfile);
 router.route("/delete").delete(veryfyToken,deleteAccount);
 router.route("/myself").get(veryfyToken,getCurrentUser);
-router.route("/logout").get(veryfyToken,logOutUser);
+router.route("/logout").get(veryfyToken,logoutUser);
 
 export default router;
