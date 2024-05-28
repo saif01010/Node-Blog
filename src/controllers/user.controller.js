@@ -164,4 +164,34 @@ const deleteAccount = asyncHandler(async(req,res)=>{
     return res.status(200).json(new ApiResponse(200,{},"User deleted successfully"));
 });
 
-export {registerUser,loginUser,logoutUser,editProfile,deleteAccount,getCurrentUser};
+const getAllUsers = asyncHandler(async(req,res)=>{
+    const users = await User.find();
+    if(!users){
+        throw new ApiError(500,"Failed to get users");
+    };
+    return res.status(200).json(new ApiResponse(200,users,"Users fetched successfully"));
+});
+
+const logOutUser = asyncHandler(async(req,res)=>{
+    const userId = req.user._id;
+    // console.log(userId)
+    const user = await User.findByIdAndUpdate(userId,{
+        $set:{
+            refreshToken: ''
+        }
+    },{new:true});
+    // console.log(req.cookies.refreshToken)
+    req.cookies.destroy
+    const option = {
+        httpOnly:true,
+        secure:true
+    }
+    return res.status(200)
+    .cookie("refreshToken",option)
+    .cookie("accessToken",option)
+    .json(new ApiResponse(200,{},"User logged out successfully"));
+
+    
+})
+
+export {registerUser,loginUser,logoutUser,editProfile,deleteAccount,getCurrentUser,getAllUsers,logOutUser};

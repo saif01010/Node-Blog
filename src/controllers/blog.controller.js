@@ -65,7 +65,7 @@ const updateBlog = asyncHandler(async(req,res)=>{
     const {id} = req.params;
 
     const {title,content,tags} = req.body;
-    console.log(title,content,tags)
+    // console.log(title,content,tags)
     const blog = await Blog.findByIdAndUpdate(id,{
        $set: {title,
         content,
@@ -78,6 +78,7 @@ const updateBlog = asyncHandler(async(req,res)=>{
 
     return res.status(200).json(new ApiResponse(200,blog,"Blog updated successfully"));
 })
+
 
 
 

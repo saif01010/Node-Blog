@@ -19,7 +19,7 @@ const veryfyToken = asyncHandler(async (req, res, next) => {
         if (!user) {
             throw new ApiError(401, "Unauthorized");
         };
-        console.log("User: ", user);
+        // console.log("User: ", user);
         req.user = user;
         next(); 
     } catch (error) {
