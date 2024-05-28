@@ -61,4 +61,25 @@ const getBlogById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, blog, 'Blog fetched successfully'));
 });
 
-export { createBlog, getBlogs, getBlogById};
+const updateBlog = asyncHandler(async(req,res)=>{
+    const {id} = req.params;
+
+    const {title,content,tags} = req.body;
+    console.log(title,content,tags)
+    const blog = await Blog.findByIdAndUpdate(id,{
+       $set: {title,
+        content,
+        tags}
+    },{new:true});
+
+    if(!blog){
+        throw new ApiError(500,"Failed to update blog");
+    }
+
+    return res.status(200).json(new ApiResponse(200,blog,"Blog updated successfully"));
+})
+
+
+
+
+export { createBlog, getBlogs, getBlogById,updateBlog};
